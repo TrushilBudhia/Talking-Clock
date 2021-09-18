@@ -1,7 +1,12 @@
 function parseTime(time) {
+    // Using the ':' as the indicator of where to split the numbers to create the timeSplit array
     const timeSplit = time.split(':').map(Number)
+    // If the value of the first index of the timeSplit array is great than 12, subtract 12 from the value to bring it down to the 12 hour context
+    // If the hour is strictly equal to 0, set the hour value to 12
+    // Otherwise the hour value is the first index of the timeSplit array
     const hours = timeSplit[0] > 12 ? timeSplit[0] - 12 : timeSplit[0] === 0 ? 12 : timeSplit[0];
     const minutes = timeSplit[1] === 0 ? 60 : timeSplit[1];
+    // Determining if the hour in the timeSplit value is an am or pm value
     const ampm = timeSplit[0] >= 12 ? 'pm' : 'am'
     return { hours, minutes, ampm }
 }
@@ -12,11 +17,14 @@ function timeToText ({ hours, minutes, ampm }) {
 
     const displayHours = hoursArray[hours - 1];
     const displayMinutes = minutesArray[minutes - 1];
+    // If the minutes value is less than ten, the adjoining word will be 'oh', otherwise it will be empty ('')
     const displayAdjoiningWord = minutes < 10 ? 'oh' : '';
 
+    // Returning the display statement the user will view
     return `It's ${displayHours} ${displayAdjoiningWord} ${displayMinutes} ${ampm}`
 }
 
+// The function to render the time into words
 function renderTime() {
     // Getting the current date and time
     const date = new Date();
@@ -26,12 +34,15 @@ function renderTime() {
     // Creating a time string in a 24hour format
     const timeString = `${hour}:${minute}`;
     const textTime = timeToText(parseTime(timeString));
-
+    
+    // Setting the innerHTML of the div element with the id "time" to that of the time in text
     document.querySelector('#time').innerHTML = textTime;
 }
 
+// Using setInterval to invoke the renderTime function every second so that the time updates as the minute and hour changes
 setInterval(function() {
     renderTime();
 }, 1000);
 
+// Invoking the renderTime function
 renderTime();
